@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>孝心小测验 | 温馨亲子时光</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #ffecd2 0%, #fcb69f 50%, #ff9a8b 100%);
+            background-attachment: fixed;
+            font-family: 'Segoe UI', 'Poppins', 'Comic Neue', 'Kiwi Maru', 'Helvetica Neue', sans-serif;
+            padding: 30px 20px 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 主卡片 - 阳光糖果风格 */
+        .quiz-card {
+            max-width: 750px;
+            width: 100%;
+            background: rgba(255, 254, 245, 0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 64px;
+            box-shadow: 0 30px 45px rgba(0, 0, 0, 0.2), 0 12px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid #ffe2b5;
+        }
+
+        /* 头部装饰 */
+        .hero-header {
+            background: linear-gradient(135deg, #f9a66c, #f6d365, #fda085);
+            padding: 28px 24px 20px;
+            text-align: center;
+            border-bottom: 5px solid #ffcd7e;
+        }
+
+        .hero-header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff9e8;
+            text-shadow: 3px 3px 0 #c25d2e;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-header p {
+            background: #fff1b5;
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 60px;
+            margin-top: 12px;
+            font-weight: bold;
+            color: #b45a2b;
+            font-size: 0.9rem;
+        }
+
+        /* 免责声明区域 - 温馨提醒 */
+        .disclaimer-box {
+            background: #fff9ef;
+            border-left: 8px solid #ff9966;
+            padding: 18px 22px;
+            margin: 12px 20px 0 20px;
+            border-radius: 32px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .disclaimer-icon {
+            font-size: 2rem;
+            background: #ffe0b5;
+            width: 48px;
+            height: 48px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .disclaimer-text {
+            font-size: 0.85rem;
+            color: #7a4a2a;
+            line-height: 1.45;
+            flex: 1;
+        }
+        .disclaimer-text strong {
+            color: #c95f2e;
+            font-size: 0.9rem;
+        }
+        .disclaimer-text p {
+            margin-top: 4px;
+        }
+
+        /* 进度区域 */
+        .progress-area {
+            background: #fff3e0;
+            padding: 16px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-bottom: 2px dashed #ffcd94;
+            margin-top: 12px;
+        }
+
+        .progress-wrapper {
+            flex: 2;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .progress-bg {
+            flex: 1;
+            height: 16px;
+            background: #ffe1b9;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff9966, #ff5e62);
+            border-radius: 30px;
+            transition: width 0.3s ease;
+        }
+
+        .q-counter {
+            background: #ffc489;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #4d2a10;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        /* 题目卡片 */
+        .question-container {
+            padding: 35px 30px 20px;
+            background: #fffdf7;
+        }
+
+        .question-text {
+            font-size: 1.65rem;
+            font-weight: 700;
+            line-height: 1.4;
+            color: #3a2c1f;
+            margin-bottom: 32px;
+            background: linear-gradient(125deg, #c25d2e, #e68a2e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            border-left: 6px solid #ffb347;
+            padding-left: 20px;
+        }
+
+        /* 选项区 缤纷按钮 - 不再显示分数 */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            background: #fff2e2;
+            border: 2px solid #ffcf9a;
+            border-radius: 60px;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 0 #d9b27a;
+        }
+
+        .option-item:hover {
+            transform: translateY(-2px);
+            background: #ffe2c7;
+            border-color: #ffaa55;
+            box-shadow: 0 7px 0 #d9b27a;
+        }
+
+        .option-item.selected {
+            background: #ffdcb0;
+            border-color: #ff8c42;
+            box-shadow: 0 3px 0 #d9b27a;
+            transform: translateY(2px);
+        }
+
+        .option-emoji {
+            font-size: 2rem;
+            width: 52px;
+            text-align: center;
+        }
+
+        .option-label {
+            font-weight: 600;
+            font-size: 1.05rem;
+            flex: 1;
+            color: #4e3421;
+        }
+
+        /* 导航区 */
+        .nav-buttons {
+            padding: 10px 30px 35px;
+            background: #fff6ea;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            background: #ffddb0;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #613913;
+            box-shadow: 0 4px 0 #bb7a44;
+            font-family: inherit;
+        }
+
+        .nav-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #bb7a44;
+        }
+
+        .nav-btn.primary {
+            background: #ff914d;
+            color: white;
+            box-shadow: 0 4px 0 #b45a2a;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        /* 结果区域 - 鲜艳动人 */
+        .result-area {
+            padding: 35px 28px 45px;
+            text-align: center;
+            background: radial-gradient(circle at top left, #fff3e6, #ffe0c4);
+            border-top: 6px solid gold;
+        }
+
+        .result-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin: 10px 0;
+            letter-spacing: 2px;
+        }
+
+        .result-badge {
+            font-size: 4rem;
+            font-weight: 900;
+            margin: 15px 0;
+            padding: 10px 20px;
+            border-radius: 80px;
+            display: inline-block;
+            background: white;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+        }
+
+        .total-score-box {
+            background: #ffefcf;
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #c25d2e;
+            margin: 12px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .result-desc {
+            background: rgba(255,255,230,0.9);
+            border-radius: 48px;
+            padding: 24px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            border-left: 12px solid #ffaa66;
+            color: #3e2a1f;
+        }
+
+        .restart-btn {
+            background: #ff7b4a;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 14px 36px;
+            margin-top: 30px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 7px 0 #aa4f2c;
+        }
+
+        .restart-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #aa4f2c;
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 14px;
+            color: #b97f54;
+            background: #fff2df;
+        }
+
+        @media (max-width: 550px) {
+            .question-text {
+                font-size: 1.25rem;
+            }
+            .option-label {
+                font-size: 0.9rem;
+            }
+            .result-title {
+                font-size: 1.8rem;
+            }
+            .result-badge {
+                font-size: 2.6rem;
+            }
+            .disclaimer-box {
+                margin: 12px 12px 0 12px;
+                padding: 14px;
+            }
+            .total-score-box {
+                font-size: 1.3rem;
+                padding: 8px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-card" id="filialApp">
+    <div class="hero-header">
+        <h1>🌸 孝心小测验 🌸</h1>
+        <p>❤️ 10道暖心题目 · 看见孩子心中的爱 ❤️</p>
+    </div>
+
+    <!-- 免责声明区域 - 开篇明确提示 -->
+    <div class="disclaimer-box" id="disclaimerBox">
+        <div class="disclaimer-icon">📢</div>
+        <div class="disclaimer-text">
+            <strong>📋 免责声明</strong>
+            <p>本测评结果仅供参考，旨在促进亲子沟通与自我觉察，不代表对个人品格的最终评判。每个孩子都有独特的成长节奏，孝心的表达方式也各不相同。请以鼓励和理解为前提，共同营造温暖有爱的家庭氛围。❤️</p>
+        </div>
+    </div>
+
+    <div class="progress-area">
+        <div class="progress-wrapper">
+            <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="q-counter" id="counterText">第1 / 10题</div>
+        </div>
+    </div>
+    <div id="mainContent"></div>
+    <footer>✨ 每一份心意都值得被看见，诚实回答，拥抱温情 ✨</footer>
+</div>
+
+<script>
+    // ======================= 孝心测评题库（10题）========================
+    // 每题四个选项对应分数（内部使用，界面不显示分数）：很符合=3分，比较符合=2分，不太符合=1分，完全不符合=0分
+    // 总分范围 0~30 分，根据总分划分为四个等级
+    const questions = [
+        {
+            text: "🧸 主动关心长辈的身体健康，会提醒他们按时吃饭/吃药。",
+            options: [
+                { label: "🌟 总是这样做", score: 3 },
+                { label: "👍 经常这样做", score: 2 },
+                { label: "🌱 偶尔会", score: 1 },
+                { label: "🍂 几乎没有", score: 0 }
+            ]
+        },
+        {
+            text: "🏠 在家时，会帮忙分担家务（洗碗、扫地、整理房间等）。",
+            options: [
+                { label: "💪 非常积极，主动承担", score: 3 },
+                { label: "🙌 经常做，叫了就动", score: 2 },
+                { label: "👀 偶尔帮忙", score: 1 },
+                { label: "😶 基本不做", score: 0 }
+            ]
+        },
+        {
+            text: "📞 外出或住校时，会主动打电话或发信息问候父母/长辈。",
+            options: [
+                { label: "💖 经常主动联系，分享日常", score: 3 },
+                { label: "✨ 定期问候，还算频繁", score: 2 },
+                { label: "📱 只有重要事情才联系", score: 1 },
+                { label: "❌ 很少主动联系", score: 0 }
+            ]
+        },
+        {
+            text: "🎁 记得长辈的生日或节日，会用心准备礼物或祝福。",
+            options: [
+                { label: "🎉 每年都会精心准备", score: 3 },
+                { label: "🎈 大部分会记得并表达心意", score: 2 },
+                { label: "📅 偶尔会忘记，但尽量弥补", score: 1 },
+                { label: "😔 很少放在心上", score: 0 }
+            ]
+        },
+        {
+            text: "🗣️ 与长辈沟通时，态度耐心温和，不轻易顶嘴。",
+            options: [
+                { label: "🥰 非常耐心，总能好好说话", score: 3 },
+                { label: "😊 大多数时候温和", score: 2 },
+                { label: "😐 有时会不耐烦", score: 1 },
+                { label: "😤 容易急躁或顶撞", score: 0 }
+            ]
+        },
+        {
+            text: "💞 会观察长辈的情绪，当他们不开心时主动安慰。",
+            options: [
+                { label: "🌈 总能察觉并用心陪伴", score: 3 },
+                { label: "🌻 经常关心和开导", score: 2 },
+                { label: "🍀 偶尔会安慰一下", score: 1 },
+                { label: "🍂 不太在意他们的情绪", score: 0 }
+            ]
+        },
+        {
+            text: "📖 愿意倾听长辈讲过去的故事，尊重他们的经验。",
+            options: [
+                { label: "👂 非常喜欢听，认真回应", score: 3 },
+                { label: "🎧 比较愿意听，不打断", score: 2 },
+                { label: "🤔 偶尔听听，但会走神", score: 1 },
+                { label: "🙉 觉得无聊，不愿听", score: 0 }
+            ]
+        },
+        {
+            text: "🍲 有好吃的或新鲜事物，会第一时间想与家人分享。",
+            options: [
+                { label: "🍭 总是惦记着长辈", score: 3 },
+                { label: "🍰 经常想到他们", score: 2 },
+                { label: "🍬 偶尔会分享", score: 1 },
+                { label: "🍪 很少分享", score: 0 }
+            ]
+        },
+        {
+            text: "🕊️ 体谅父母工作的辛苦，不乱花钱、不无理取闹。",
+            options: [
+                { label: "💎 非常懂事，懂得节俭", score: 3 },
+                { label: "🌼 大部分时间能体谅", score: 2 },
+                { label: "🌿 有时会任性", score: 1 },
+                { label: "💢 常提过分要求", score: 0 }
+            ]
+        },
+        {
+            text: "💌 当父母生病或劳累时，会主动端茶倒水、照顾他们。",
+            options: [
+                { label: "🏥 无微不至地照顾", score: 3 },
+                { label: "🤗 会尽力帮忙", score: 2 },
+                { label: "😟 简单问候一下", score: 1 },
+                { label: "😶 不太会照顾人", score: 0 }
+            ]
+        }
+    ];
+
+    // ---------- 应用状态 ----------
+    let currentQIndex = 0;          // 0-9
+    let answers = new Array(10).fill(null);  // 存储每题得分 (0,1,2,3)
+    let testCompleted = false;
+
+    // DOM 元素
+    const mainContent = document.getElementById('mainContent');
+    const progressFill = document.getElementById('progressFill');
+    const counterText = document.getElementById('counterText');
+
+    // 更新进度条 & 计数器
+    function updateProgressUI() {
+        const answeredCount = answers.filter(a => a !== null).length;
+        const percent = (answeredCount / 10) * 100;
+        progressFill.style.width = `${percent}%`;
+        if (!testCompleted && currentQIndex < 10) {
+            counterText.innerText = `第${currentQIndex+1} / 10题 · 已完成${answeredCount}题`;
+        } else if (testCompleted) {
+            counterText.innerText = `🎉 孝心结果出炉 🎉`;
+        } else {
+            counterText.innerText = `第${currentQIndex+1} / 10题`;
+        }
+    }
+
+    // 计算总分
+    function getTotalScore() {
+        let total = 0;
+        for(let i=0; i<answers.length; i++) {
+            if(answers[i] !== null) total += answers[i];
+        }
+        return total;
+    }
+
+    // 根据总分获取等级和描述 (四种结果)
+    function getResultCategory(score) {
+        // 满分30分
+        if(score >= 24) {
+            return {
+                level: "很孝顺",
+                badge: "🌹 很孝顺 · 暖心天使 🌹",
+                color: "#f7b05e",
+                description: "🎉 恭喜！孩子的孝心闪闪发光，如同冬日暖阳。TA 不仅懂得体贴长辈，更将感恩融入日常细节。这份发自内心的关爱让家庭充满温馨与幸福。请继续用爱浇灌，孩子会成为更加善良、有责任感的人。愿这份孝心长久陪伴家人左右！❤️"
+            };
+        } else if(score >= 17) {
+            return {
+                level: "比较孝顺",
+                badge: "🌸 比较孝顺 · 暖心萌芽 🌸",
+                color: "#ffbe76",
+                description: "✨ 不错哦！孩子已经具备良好的孝心意识，时常能体谅长辈并付诸行动。虽然偶尔会有小疏忽，但内心充满对家人的爱。多给予鼓励和正向引导，孩子的孝心会越来越饱满。继续保持温暖的互动，亲情会愈发深厚！💞"
+            };
+        } else if(score >= 8) {
+            return {
+                level: "不太孝顺",
+                badge: "🍃 不太孝顺 · 尚需灌溉 🍃",
+                color: "#e6b87e",
+                description: "🌱 孩子目前对孝心的表达还不够充分，可能因为年龄、性格或习惯尚未养成。但这并不代表孩子没有爱，而是需要家长更多的陪伴和引导。一起聊聊“感恩”的意义，多创造亲子互动的机会，孝心的种子终会发芽成长。加油！🌟"
+            };
+        } else {
+            return {
+                level: "不孝顺",
+                badge: "🍂 不孝顺 · 静待花开 🍂",
+                color: "#cc9c6b",
+                description: "💌 孩子的孝心表现目前较弱，但这正是开启温情教育的好时机。每个孩子内心都渴望被爱，也拥有爱他人的能力。请家长多一些耐心，用行动示范关怀，鼓励孩子参与家庭事务，慢慢培养责任感和同理心。爱需要练习，未来一定会越来越好！🌼"
+            };
+        }
+    }
+
+    // 渲染结果界面（显示总分）
+    function showResult() {
+        testCompleted = true;
+        const totalScore = getTotalScore();
+        const result = getResultCategory(totalScore);
+        
+        const resultHtml = `
+            <div class="result-area">
+                <div class="result-title" style="color:#b64926;">✨ 孝心测评报告 ✨</div>
+                <div class="result-badge" style="background: ${result.color}; color: white; text-shadow: 2px 2px 0 #914d2a;">
+                    ${result.level}
+                </div>
+                <div class="total-score-box">
+                    📊 总分：${totalScore} 分 / 30 分
+                </div>
+                <div class="result-desc">
+                    <strong>📖 暖心寄语：</strong><br>
+                    ${result.description}<br><br>
+                    🌟 孝心是一种能力，更是一份珍贵的礼物。测评只是参考，爱与成长永远在路上。
+                </div>
+                <button class="restart-btn" id="restartQuizBtn">🌸 重新测试 🌸</button>
+            </div>
+        `;
+        
+        mainContent.innerHTML = resultHtml;
+        updateProgressUI();
+        
+        const restartBtn = document.getElementById('restartQuizBtn');
+        if(restartBtn) {
+            restartBtn.addEventListener('click', () => {
+                // 重置所有状态
+                currentQIndex = 0;
+                answers = new Array(10).fill(null);
+                testCompleted = false;
+                renderCurrentQuestion();
+            });
+        }
+    }
+    
+    // 渲染当前题目（选项右侧不显示分数）
+    function renderCurrentQuestion() {
+        if(testCompleted) return;
+        if(currentQIndex >= 10) {
+            showResult();
+            return;
+        }
+        
+        const q = questions[currentQIndex];
+        const selectedScore = answers[currentQIndex]; // null 或分数
+        
+        // 生成选项HTML - 不显示分数，只显示选项文字和emoji
+        let optionsHtml = '';
+        q.options.forEach((opt, idx) => {
+            const isSelected = (selectedScore !== null && selectedScore === opt.score);
+            const selectedClass = isSelected ? 'selected' : '';
+            // 动态小表情
+            let emoji = '🍃';
+            if(opt.label.includes('总是')) emoji = '💖';
+            else if(opt.label.includes('经常')) emoji = '👍';
+            else if(opt.label.includes('偶尔')) emoji = '🌱';
+            else emoji = '🍂';
+            
+            optionsHtml += `
+                <div class="option-item ${selectedClass}" data-score="${opt.score}">
+                    <div class="option-emoji">${emoji}</div>
+                    <div class="option-label">${opt.label}</div>
+                </div>
+            `;
+        });
+        
+        const questionHtml = `
+            <div class="question-container">
+                <div class="question-text">${q.text}</div>
+                <div class="options-grid" id="optionsGrid">
+                    ${optionsHtml}
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prevBtn" ${currentQIndex === 0 ? 'disabled' : ''}>◀ 上一题</button>
+                <button class="nav-btn primary" id="nextBtn">${currentQIndex === 9 ? '📢 查看结果' : '下一题 ▶'}</button>
+            </div>
+        `;
+        
+        mainContent.innerHTML = questionHtml;
+        updateProgressUI();
+        
+        // 绑定选项点击事件
+        const optionDivs = document.querySelectorAll('.option-item');
+        optionDivs.forEach(option => {
+            option.addEventListener('click', (e) => {
+                const score = parseInt(option.getAttribute('data-score'));
+                // 保存答案
+                answers[currentQIndex] = score;
+                // 重新渲染当前题目以高亮选中项
+                renderCurrentQuestion();
+            });
+        });
+        
+        // 绑定导航按钮
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        if(prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if(currentQIndex > 0) {
+                    currentQIndex--;
+                    renderCurrentQuestion();
+                }
+            });
+        }
+        
+        if(nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                // 检查是否已作答
+                if(answers[currentQIndex] === null) {
+                    alert("🌸 请选择一个选项，让我们更了解孩子的心意～");
+                    return;
+                }
+                if(currentQIndex < 9) {
+                    currentQIndex++;
+                    renderCurrentQuestion();
+                } else if(currentQIndex === 9 && answers[currentQIndex] !== null) {
+                    // 全部完成，计算结果
+                    showResult();
+                }
+            });
+        }
+    }
+    
+    // 初始化第一次渲染
+    renderCurrentQuestion();
+</script>
+</body>
+</html>
